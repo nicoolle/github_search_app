@@ -7,23 +7,34 @@ import 'package:ledsdoit/constants/app_sizes.dart';
 import 'package:ledsdoit/data/providers/github_repo_search_notifier.dart';
 import 'package:ledsdoit/data/models/github_repository.dart';
 
-class SearchResultReposWidget extends ConsumerWidget {
+class SearchResultReposWidget extends ConsumerStatefulWidget {
   final List<GitHubRepository> githubRepositoriesList;
+  final TextEditingController controller;
 
   const SearchResultReposWidget(
-      {super.key, required this.githubRepositoriesList});
+      {super.key,
+      required this.githubRepositoriesList,
+      required this.controller});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    return Expanded(
-      child: githubRepositoriesList.isEmpty
+  ConsumerState<SearchResultReposWidget> createState() =>
+      _SearchResultReposWidgetState();
+}
+
+class _SearchResultReposWidgetState
+    extends ConsumerState<SearchResultReposWidget> {
+
+  @override
+  Widget build(BuildContext context) {
+    return Flexible(
+      child: widget.githubRepositoriesList.isEmpty
           ? const EmptyDataMessageWidget(
               message: EmptyDataMessages.emptySearch,
             )
           : ListView.builder(
-              itemCount: githubRepositoriesList.length,
+              itemCount: widget.githubRepositoriesList.length,
               itemBuilder: (context, index) {
-                final repository = githubRepositoriesList[index];
+                final repository = widget.githubRepositoriesList[index];
                 final isFavorite = ref
                     .read(githubRepoSearchProvider.notifier)
                     .isFavorite(repository);

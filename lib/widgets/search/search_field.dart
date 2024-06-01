@@ -6,12 +6,14 @@ class SearchField extends StatefulWidget {
   final FocusNode focusNode;
   final Function(String) onSearch;
   final TextEditingController controller;
+  final VoidCallback callback;
 
   const SearchField({
     super.key,
     required this.focusNode,
     required this.onSearch,
     required this.controller,
+    required this.callback,
   });
 
   @override
@@ -54,17 +56,17 @@ class _SearchFieldState extends State<SearchField> {
         filled: true,
         prefixIcon: SvgPicture.asset(
           'assets/icons/search_icon.svg',
-          fit: BoxFit.contain,
+          fit: BoxFit.scaleDown,
         ),
         suffixIcon: widget.controller.text.isNotEmpty
             ? IconButton(
                 icon: SvgPicture.asset('assets/icons/clear_icon.svg'),
                 onPressed: () {
+                  widget.callback();
                   widget.controller.clear();
                   widget.onSearch('');
                   widget.focusNode.unfocus();
-                },
-              )
+                })
             : null,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12.0),

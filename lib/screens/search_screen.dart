@@ -60,24 +60,6 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
           child: Column(
             children: [
               gapH16,
-              // TextField(
-              //   controller: _searchController,
-              //   decoration: InputDecoration(
-              //     hintText: 'Search',
-              //     prefixIcon: const Icon(Icons.search),
-              //     fillColor: _focusNode.hasFocus
-              //         ? AppColors.blueLight
-              //         : AppColors.greyLayer,
-              //   ),
-              //   style: const TextStyle(fontSize: 18),
-              //   onSubmitted: (query) {
-              //     if (query.isNotEmpty) {
-              //       ref
-              //           .read(githubRepoSearchProvider.notifier)
-              //           .searchRepositories(_searchController.text);
-              //     } else {}
-              //   },
-              // ),
               SearchField(
                   focusNode: _focusNode,
                   onSearch: (query) {
@@ -87,12 +69,20 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                           .searchRepositories(_searchController.text);
                     } else {}
                   },
+                  callback: () async {
+                    setState(() {
+                      searchState.copyWith(repositories: []);
+                    });
+                  },
                   controller: _searchController),
+              gapH16,
               searchState.isLoading
                   ? const Loader()
-                  : _searchController.value.text != ''
+                  : _searchController.text != ''
                       ? SearchResultReposWidget(
-                          githubRepositoriesList: searchState.repositories)
+                          githubRepositoriesList: searchState.repositories,
+                          controller: _searchController,
+                        )
                       : SearchHistoryWidget(
                           searchHistoryList: searchState.searchHistory)
             ],
@@ -105,6 +95,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
   @override
   void dispose() {
     _focusNode.dispose();
+    _searchController.dispose();
     super.dispose();
   }
 }

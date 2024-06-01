@@ -11,6 +11,7 @@ class GithubSearchApp extends StatelessWidget {
     return MaterialApp.router(
       routerConfig: goRouter(),
       theme: ThemeData(
+        fontFamily: 'Raleway',
         appBarTheme: const AppBarTheme(
           centerTitle:  true,
         ),
